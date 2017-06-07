@@ -1,6 +1,6 @@
 # matrix-chatbot
 
-This is a simple script to listen on a matrix server for messages from a specific account (*BOSS*) in a specific room and if the message matches a defined *REGEXP* (do:command::) it will execute a specific command.
+This is a simple script to listen on a ![matrix server](http://matrix.org/) for messages from a specific account (*BOSS*) in a specific room and if the message matches a defined *REGEXP* (do:command::) it will execute a specific command.
 Like:
 ```
   do:ls::
@@ -41,7 +41,7 @@ Options:
 
 ## Requirements
 
-- Matrix Client-Server SDK for Python 2 and 3 (https://github.com/matrix-org/matrix-python-sdk/)
+- ![Matrix Client-Server SDK for Python 2 and 3](https://github.com/matrix-org/matrix-python-sdk/)
 - you need to register a user for the bot on the matrix server
 - start a direct chat from the *BOSS* user account to the bot, you will need the room's ID to set up the bot's config file
 
