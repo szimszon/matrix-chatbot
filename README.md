@@ -47,8 +47,8 @@ Options:
 
 ## Install
 
-1. copy the matrix_chatbot.py into /usr/local/bin directory
-1. copy the files from lib/ directory to /usr/local/lib/chatbot/ directory
+1. copy the roles/matrix-chatbot/files/matrix_chatbot.py into /usr/local/bin directory
+1. copy the files from roles/matrix-chatbot/files/lib/ directory to /usr/local/lib/chatbot/ directory
 1. set up the sudoers file for the chatbot user so the user can run the requested scripts and commands
 1. for systemd systems copy the roles/matrix-chatbot/templates/matrix-chatbot.service.j2 file into /etc/systemd/system/matrix-chatbot.service directory
 1. setup the matrix-chatbot.service file
