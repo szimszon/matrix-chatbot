@@ -1,0 +1,15 @@
+## users var structure
+#
+#users:
+#  - name: <username>
+#    group: <user group>
+#    authorized:
+#      - "{{ inventory_hostname }}/<username>.pub"
+#    sudoers:
+#      - "{{ inventory_hostname }}/<username>"
+#    files:
+#      -
+#      <or>
+#      - src: "{{ inventory_hostname }}/<filename>"
+#        dest: "<destination path and filename>"
+#    system: yes  <- optional

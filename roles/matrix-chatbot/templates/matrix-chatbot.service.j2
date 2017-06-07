@@ -1,0 +1,13 @@
+[Unit]
+Description=Matrix chatbot
+After=network.target
+
+[Service]
+User={{ matrix_chatbot_user }}
+Group={{ matrix_chatbot_group }}
+RestartSec=5
+ExecStart=/usr/bin/python2.7 {{ matrix_chatbot_bin_dir }}/matrix_chatbot.py -j {{ matrix_chatbot_uid }} -p {{ matrix_chatbot_password }} -s {{ matrix_chatbot_lib_dir }} -b {{ matrix_chatbot_boss }} -r "{{ matrix_chatbot_regexp }}" -a "{{ matrix_chatbot_argsep }}" -o "{{ matrix_chatbot_room }}" -u "{{ matrix_chatbot_url }}"
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+matrix_chatbot_packages:
+        - git-core
+matrix_chatbot_user: "chatbot"
+matrix_chatbot_group: "chatbot"
+matrix_chatbot_groups:
+matrix_chatbot_home: "/home/chatbot"
+matrix_chatbot_bin_dir: "/usr/local/bin"
+matrix_chatbot_lib_dir: "/usr/local/lib/chatbot"
+matrix_chatbot_url:
+matrix_chatbot_uid:
+matrix_chatbot_password:
+matrix_chatbot_boss:
+matrix_chatbot_room:
+matrix_chatbot_regexp: "^do:[ ]*(.*)::$"
+matrix_chatbot_argsep: '='

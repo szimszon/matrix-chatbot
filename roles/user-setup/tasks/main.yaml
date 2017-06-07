@@ -1,0 +1,70 @@
+---
+- name: create group if needed
+  group:
+    name: "{{ item.group }}"
+  with_items:
+    - "{{ users }}"
+
+- name: create user if needed
+  user:
+    name: "{{ item.name }}"
+    state: present
+    group: "{{ item.group }}"
+    groups: "{{ item.groups }}"
+    password: "{{ item.password|default(omit) }}"
+    home: "{{ item.home|default(omit) }}"
+    shell: "{{ item.shell|default(omit) }}"
+    comment: "{{ item.gecos|default(omit) }}"
+    system: "{{ item.system|default(omit) }}"
+  with_items:
+    - "{{ users }}"
+
+- name: check if accountservice dir is present
+  command: ls /var/lib/AccountsService/
+  register: ac
+  changed_when: False
+  ignore_errors: yes
+
+- name: setup accountservice for system users
+  copy:
+    src: systemuser
+    dest: "/var/lib/AccountsService/users/{{ item.name }}"
+    owner: root
+    group: root
+  with_items:
+    - "{{ users }}"
+  when: ac is defined and ac.rc == 0 and item.system|default(False) == True
+
+- name: manage user authorized_keys file
+  authorized_key:
+    user: "{{ item.0.name }}"
+    key: "{{ lookup('file', item.1.file) }}"
+    key_options: "{{ item.1.key_options|default(omit) }}"
+  when: item.1.file is defined
+  with_subelements:
+    - "{{ users }}"
+    - authorized
+
+- name: set up sudoers if needed
+  copy:
+    src: "{{ item.1 }}"
+    dest: "/etc/sudoers.d/{{ item.1 | basename }}"
+    owner: root
+    group: root
+  with_subelements:
+    - "{{ users }}"
+    - sudoers
+  when: item.1 != None 
+
+- name: copy some files for the user
+  copy:
+    src: "{{ item.1.src }}"
+    dest: "{{ item.1.dest }}"
+    owner: "{{ item.0.name }}"
+    group: "{{ item.0.group }}"
+    mode: "{{ item.1.mode|default(omit) }}"
+  when: item.1 != None
+  with_subelements:
+    - "{{ users }}"
+    - files
+

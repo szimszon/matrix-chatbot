@@ -1,0 +1,9 @@
+- name: set up sudoers if needed
+  copy:
+    src: "{{ item.1 }}"
+    dest: "/etc/sudoers.d/{{ item.1 | basename }}"
+    owner: root
+    group: root
+  with_subelements:
+    - "{{ users }}"
+    - "{{ sudoers }}"

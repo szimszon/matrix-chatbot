@@ -1,0 +1,71 @@
+- name: "check needed packages for matrix-chatbot"
+  apt:
+          name: "{{ item }}"
+          state: "present"
+  with_items: 
+    - "{{ matrix_chatbot_packages }}"
+
+- name: "check for matrix-python-sdk"
+  shell: grep ".........." valami.txt
+  register: is_sdk
+  ignore_errors: yes
+  changed_when: False
+
+- name: "clone the matrix-python-sdk"
+  git:
+    repo: 'https://github.com/matrix-org/matrix-python-sdk.git'
+    dest: /tmp/checkout
+  when: " is_sdk.rc !=0 "
+
+- name: "install the matrix-python-sdk"
+  shell: cd /tmp/checkout && python /tmp/checkout/setup.py install
+  when: " is_sdk.rc !=0 "
+
+- name: "remove matrix-python-sdk checkout "
+  file:
+          name: "/tmp/checkout"
+          state: absent
+  when: " is_sdk.rc !=0 "
+
+- name: "install matrix chatbot script"
+  copy:
+    src: "matrix_chatbot.py"
+    dest: "{{ matrix_chatbot_bin_dir }}/matrix_chatbot.py"
+    mode: 0550
+    owner: "{{ matrix_chatbot_user }}"
+    group: "{{ matrix_chatbot_group }}"
+  notify:
+    - "restart matrix-chatbot"
+
+- name: "set up lib dir for matrix chatbot"
+  file:
+    name: "{{ matrix_chatbot_lib_dir }}"
+    owner: "{{ matrix_chatbot_user }}"
+    group: "{{ matrix_chatbot_group }}"
+    mode: "0550"
+    state: "directory"
+
+- name: "copy libs to system for matrix chatbot"
+  copy:
+    src: "{{ item }}"
+    dest: "{{ matrix_chatbot_lib_dir }}/{{ item | basename }}"
+    owner: "{{ matrix_chatbot_user }}"
+    group: "{{ matrix_chatbot_group }}"
+    mode: "0550"
+  with_fileglob:
+    - "lib/common/*"
+    - "lib/{{ ansible_fqdn }}/*"
+
+- name: "service file for matrix chatbot"
+  template:
+    src: "matrix-chatbot.service.j2"
+    dest: "/etc/systemd/system/matrix-chatbot.service"
+  notify: 
+    - "systemd daemon-reload"
+
+- name: "enable matrix chatbot"
+  service:
+    name: "matrix-chatbot"
+    state: "running"
+    enabled: true
+

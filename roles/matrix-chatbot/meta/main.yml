@@ -1,0 +1,18 @@
+dependencies:
+  - role: user-setup
+    users:
+      - name: "{{ matrix_chatbot_user }}"
+        group: "{{ matrix_chatbot_group }}"
+        groups: "{{ matrix_chatbot_groups }}"
+        gecos: "Chatbot user"
+        home: "{{ matrix_chatbot_home }}"
+        system: yes
+        uid:
+        shell: "/bin/sh"
+        authorized:
+          -
+        sudoers:
+          - "roles/chatbot/files/sudo/{{ ansible_fqdn }}/chatbot"
+        files:
+          -
+        password: 

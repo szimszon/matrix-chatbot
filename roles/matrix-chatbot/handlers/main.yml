@@ -1,0 +1,8 @@
+- name: "restart matrix-chatbot"
+  service:
+    name: "matrix-chatbot"
+    state: "restarted"
+
+- name: "systemd daemon-reload"
+  shell: "systemctl daemon-reload"
+
